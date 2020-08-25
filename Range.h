@@ -2,11 +2,12 @@
 #define _RANGE_H_
 
 #include <map>
+#include <functional>
 
 class Range
 {
 private:
-    std::map<int, int> table;
+    std::map<int, int, std::greater<int>> table;
 public:
     Range(/* args */);
     ~Range();
@@ -17,6 +18,9 @@ public:
 
     // print everything
     void printAll();
+
+    void getUpper(int val);
+    void getLower(int val);
 };
 
 
