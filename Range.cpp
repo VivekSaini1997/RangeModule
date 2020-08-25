@@ -13,11 +13,11 @@ Range::~Range() {
 
 // adds a range to the data structure
 void Range::addRange(int start, int end){
-    auto v1 = table.upper_bound(start);
+    auto v1 = table.lower_bound(start);
     auto v2 = table.lower_bound(end);
     // if the end of the range is less than what exists in the table
     // insert normally
-    if (v1 == table.end()){
+    if (v2 == table.end()){
         table.insert(std::make_pair(start, end));
         return;
     }
@@ -43,18 +43,69 @@ void Range::addRange(int start, int end){
     } else {
         // like wise if they're between values
         // it->key is the start of the range and it->val is the end
-        if (start > v1->second && end >= v2->second){
+        if ((v1 == table.end() || start > v1->second) && end >= v2->second){
             // if they don't both lie in an interval and are different, then 
             // we must keep removing elements
             // for now just print to make sure i'm doing this correctly
             table.erase(v2, v1);
             table.insert(std::make_pair(start, end));
         }
+        // if the start of the new region lies in an existing region
+        // and the end of the new region does not, we need to remove the 
+        // interval the start region lies in and create a new interval that starts
+        // where that region started and ends at "end"
+        else if (start <= v1->second && end >= v2->second){
+            int w1 = v1->first;
+            table.erase(v2, ++v1);
+            table.insert(std::make_pair(w1, end));
+        }
+        // if the end of the new region lies in an existing region
+        // while the start does not, we need to remove the interval the 
+        // ending region lies in and create a new interval that starts at "start"
+        // and ends where the new region ended
+        else if ((v1 == table.end() || start > v1->second) && end < v2->second){
+            int w2 = v2->second;
+            table.erase(v2, v1);
+            table.insert(std::make_pair(start, w2));
+        }
+        // and if both occur, we do both
+        else if (start <= v1->second && end < v2->second){
+            int w1 = v1->first;
+            int w2 = v2->second;
+            table.erase(v2, ++v1);
+            table.insert(std::make_pair(w1, w2));
+        }
     }
 }
-
+// deletes a range from the 
 void Range::deleteRange(int start, int end){
-
+    auto v1 = table.lower_bound(start);
+    auto v2 = table.lower_bound(end);
+    // if the end of the range is less than what exists in the table
+    // there is nothing to delete
+    if (v2 == table.end()){
+        return;
+    }
+    // handle if both v1 and v2 reference the same point
+    // these are simple cases
+    if (v1 == v2){
+        // if they are before an end point i.e. overlapping
+        // do nothing
+        if (start < v1->second && end < v1->second){
+            // pass
+        }
+        // if the new interval start lies in an existing interval
+        // while the new end does not, need to update the existing elements end
+        if (start < v1->second && end > v1->second){
+            v1->second = end;
+        }
+        // if they're both after an end point
+        // add a new interval
+        if (start > v1->second){
+            table.insert(std::make_pair(start, end));
+        }
+        return;
+    }
 }
 
 void Range::getRange(int start, int end){
@@ -70,8 +121,19 @@ void Range::getLower(int val){
 }
 
 
-void Range::printAll(){
+void Range::printAll() const{
     for (auto&& elem : table){
-        std::cout << elem.second << std::endl << elem.first << std::endl;
+        std::cout << elem.second << ", " << elem.first << ", ";
     }
+    std::cout << std::endl;
+}
+
+#include <vector>
+std::vector<int> Range::toVec() const{
+    std::vector<int> vec;
+    for (auto&& elem : table){
+        vec.push_back(elem.second);
+        vec.push_back(elem.first);
+    }
+    return vec;
 }

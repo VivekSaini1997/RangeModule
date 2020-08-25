@@ -1,6 +1,15 @@
 CXX = g++
-CXXFLAGS = -std=gnu++17
+CXXFLAGS = -std=gnu++17 -g -Wall -Wextra -Wpedantic
+DEPS = Range.h Tests.h
 
-default:
-	$(CXX) $(CXXFLAGS) *.h *.cpp -o range
+%.o : %.c $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
+all: Range.o main.o Tests.o
+	$(CXX) $(CXXFLAGS) *.o -o range
+
+clean:
+	rm -f *.o
+
+full:
+	make clean; make

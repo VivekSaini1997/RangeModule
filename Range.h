@@ -3,6 +3,7 @@
 
 #include <map>
 #include <functional>
+#include <vector>
 
 class Range
 {
@@ -17,10 +18,14 @@ public:
     void getRange(int, int);
 
     // print everything
-    void printAll();
+    void printAll() const;
 
     void getUpper(int val);
     void getLower(int val);
+
+    // serializes range into a list of points
+    // used for testing
+    std::vector<int> toVec() const;
 };
 
 
