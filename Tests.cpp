@@ -31,6 +31,34 @@ inline bool verifyAnswer(const Range& range, const std::vector<int>& ans, const 
     return success;
 }
 
+inline bool verifyAnswer(const std::vector<std::pair<int, int>>& actual, 
+    const std::vector<std::pair<int, int>>& expected, const char* funcname){
+    bool success = (actual == expected);
+#if ONLY_PRINT_FAILURES 
+    if (success){
+        return true;
+    }
+#endif
+    std::cout << "Test for #" << funcname << " : ";
+    if (success){
+        std::cout << "SUCCESS" << std::endl;
+    } else {
+        std::cout << "FAILURE" << std::endl;
+        std::cout << "Output : ";
+        for (auto&& elem : actual){
+            std::cout << "(" << elem.first << ", " << elem.second << "), ";
+        }
+        std::cout << std::endl;
+        std::cout << "Expected : ";
+        for (auto&& elem: expected){
+            std::cout << "(" << elem.first << ", " << elem.second << "), ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "--------------------------------------" << std::endl;
+    return success;
+}
+
 void addIntoExistingRegion()
 {
     Range range = Range();
@@ -312,6 +340,16 @@ void removeMultipleFromInterval(){
     verifyAnswer(range, ans, __FUNCTION__);    
 }
 
+void removeMultipleTimesMultipleIntervals(){
+    Range range = Range();
+    range.addRange(0, 20);
+    range.addRange(40, 60);
+    range.addRange(80, 100);
+    range.deleteRange(10, 45);
+    range.deleteRange(55, 90);
+    std::vector<int> ans = {100, 90, 55, 45, 10, 0}; 
+    verifyAnswer(range, ans, __FUNCTION__);     
+}
 void removeTests()
 {
     std::cout << __FUNCTION__ << std::endl;
@@ -325,12 +363,100 @@ void removeTests()
     removeMultipleIntervalsLeftBoundary();
     removeMultipleIntervalsRightBoundary();
     removeMultipleIntervalsBothBoundaries();
+    removeMultipleTimesMultipleIntervals();
+}
 
+void getIntervalOvelappingBothSides(){
+    Range range = Range();
+    range.addRange(0, 10);
+    auto res = range.getRange(-5, 15);
+    std::vector<std::pair<int, int>> ans = {{0, 10}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getPartialInterval(){
+    Range range = Range();
+    range.addRange(0, 10);
+    auto res = range.getRange(2, 8);
+    std::vector<std::pair<int, int>> ans = {{2, 8}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getPartialIntervalLeftBoundary(){
+    Range range = Range();
+    range.addRange(0, 10);
+    auto res = range.getRange(0, 8);
+    std::vector<std::pair<int, int>> ans = {{0, 8}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getPartialIntervalRightBoundary(){
+    Range range = Range();
+    range.addRange(0, 10);
+    auto res = range.getRange(2, 10);
+    std::vector<std::pair<int, int>> ans = {{2, 10}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getMultipleIntervals(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    auto res = range.getRange(0, 30);
+    std::vector<std::pair<int, int>> ans = {{0, 10}, {20, 30}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getMultipleIntervalsOver(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    auto res = range.getRange(-10, 40);
+    std::vector<std::pair<int, int>> ans = {{0, 10}, {20, 30}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getMultipleIntervalsLeftPartial(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    auto res = range.getRange(5, 30);
+    std::vector<std::pair<int, int>> ans = {{5, 10}, {20, 30}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getMultipleIntervalsRightPartial(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    auto res = range.getRange(0, 25);
+    std::vector<std::pair<int, int>> ans = {{0, 10}, {20, 25}}; 
+    verifyAnswer(res, ans, __FUNCTION__);
+}
+
+void getMultipleIntervalsBothPartial(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    range.addRange(40, 50);
+    auto res = range.getRange(5, 45);
+    std::vector<std::pair<int, int>> ans = {{5, 10}, {20, 30}, {40, 45}}; 
+    verifyAnswer(res, ans, __FUNCTION__);    
 }
 
 void getTests()
 {
     std::cout << __FUNCTION__ << std::endl;
+    getPartialInterval();
+    getPartialIntervalLeftBoundary();
+    getPartialIntervalRightBoundary();
+    getIntervalOvelappingBothSides();
+
+    getMultipleIntervals();
+    getMultipleIntervalsLeftPartial();
+    getMultipleIntervalsRightPartial();
+    getMultipleIntervalsOver();
+    getMultipleIntervalsBothPartial();
 }
 
 void runTests()

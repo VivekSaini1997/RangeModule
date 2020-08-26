@@ -15,7 +15,7 @@ public:
 
     void addRange(int, int);
     void deleteRange(int, int);
-    void getRange(int, int);
+    std::vector<std::pair<int, int>> getRange(int, int);
 
     // print everything
     void printAll() const;

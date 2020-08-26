@@ -1,6 +1,7 @@
 #include "Range.h"
 #include <map>
 #include <iostream>
+#include <algorithm>
 
 // nothing to do for constructor or destructor
 Range::Range() {
@@ -128,10 +129,13 @@ void Range::deleteRange(int start, int end){
         int w2 = v2->second;
         // erase every interval between and including the ones 
         // containing start and end
-        if (v1 != table.end()){ 
-            v1++;
+        // need to create a temporary iterator and increment it in order 
+        // to include the interval of v1 when erasing
+        auto vt = v1;
+        if (vt != table.end()){
+            vt++;
         }
-        table.erase(v2, v1);
+        table.erase(v2, vt);
         // if the start isn't on the boundary,  
         // then add a left entry from w1 to start of deletion range
         if (start != w1 && v1 != table.end()){
@@ -146,8 +150,44 @@ void Range::deleteRange(int start, int end){
     }
 }
 
-void Range::getRange(int start, int end){
+std::vector<std::pair<int, int>> Range::getRange(int start, int end){
+    // need to go through the map in reverse because of how it's organized
+    auto v1 = table.lower_bound(start);
+    auto v2 = table.lower_bound(end);
 
+    std::vector<std::pair<int, int>> ret;
+    // if they're both part of the same interval
+    if (v1 == v2){
+        // if the starting point lies in the interval,
+        // then there is something to return
+        // otherwise there is nothing
+        if (v1 != table.end() && start < v1->second){
+            ret.push_back(std::make_pair(start, std::min(end, v1->second)));
+        }
+        return ret;
+    }
+    
+    // first account for the first interval 
+    if (start >= v1->second || v1 == table.end()){
+        v1--;
+        start = v1->first;
+    }
+    // std::cout << start << std::endl;
+    auto it = v1;
+    if (start != it->first){
+        std::cout << start << ", " << it->second << std::endl;
+        ret.push_back(std::make_pair(start, it->second));
+        it--; 
+    }
+    for (; it != v2; it--){
+        std::cout << it->first << ", " << it->second << std::endl;
+        ret.push_back(std::make_pair(it->first, it->second));
+
+    }
+    ret.push_back(std::make_pair(it->first, std::min(it->second, end)));
+    
+    return ret;
+    
 }
 
 void Range::getUpper(int val){
