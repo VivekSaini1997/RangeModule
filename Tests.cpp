@@ -5,7 +5,7 @@
 
 // macro used to declutter output with success messages
 // only prints out failed testcases if enabled
-#define ONLY_PRINT_FAILURES 1
+#define ONLY_PRINT_FAILURES 0
 
 inline bool verifyAnswer(const Range& range, const std::vector<int>& ans, const char* funcname){
     bool success = (range.toVec() == ans);
@@ -172,7 +172,6 @@ void addConnectThreeRegions(){
     Range range = Range();
     range.addRange(0, 10);
     range.addRange(20, 30);
-
     range.addRange(10, 20);
 
     std::vector<int> ans = {30, 0};
@@ -184,10 +183,27 @@ void addDuplicateRanges(){
     range.addRange(0, 10);
     range.addRange(0, 10);
 
-    // range.addRange(15, 25);
-
     std::vector<int> ans = {10, 0};
     verifyAnswer(range, ans, __FUNCTION__);      
+}
+
+void addExtendLeft(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(-10, 5);
+    
+    std::vector<int> ans = {10, -10};
+    verifyAnswer(range, ans, __FUNCTION__);  
+}
+
+
+void addExtendRight(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(5, 20);
+    
+    std::vector<int> ans = {20, 0};
+    verifyAnswer(range, ans, __FUNCTION__);  
 }
 
 void addTests()
@@ -201,6 +217,8 @@ void addTests()
     addOverExistingRegionRightBoundary();
     addOverMultipleRegions();
     addDuplicateRanges();
+    addExtendLeft();
+    addExtendRight();
 
     // harder tests
     addOverLeftMostRegion();
@@ -214,11 +232,100 @@ void addTests()
     addConnectThreeRegions();
 }
 
+void removeNothing(){
+    Range range = Range();
+    range.deleteRange(-5, 15);
+    std::vector<int> ans = {}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeNormal(){
+    Range range = Range();
+    range.addRange(0, 20);
+    range.deleteRange(5, 15);
+    std::vector<int> ans = {20, 15, 5, 0}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeLeftBoundary(){
+    Range range = Range();
+    range.addRange(0, 20);
+    range.deleteRange(0, 15);
+    std::vector<int> ans = {20, 15}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeRightBoundary(){
+    Range range = Range();
+    range.addRange(0, 20);
+    range.deleteRange(5, 20);
+    std::vector<int> ans = {5, 0}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeMultipleIntervals(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    range.addRange(40, 50);
+    range.deleteRange(-5, 55);
+    std::vector<int> ans = {}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeMultipleIntervalsLeftBoundary(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    range.addRange(40, 50);
+    range.deleteRange(0, 55);
+    std::vector<int> ans = {}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeMultipleIntervalsRightBoundary(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    range.addRange(40, 50);
+    range.deleteRange(-5, 50);
+    std::vector<int> ans = {}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeMultipleIntervalsBothBoundaries(){
+    Range range = Range();
+    range.addRange(0, 10);
+    range.addRange(20, 30);
+    range.addRange(40, 50);
+    range.deleteRange(0, 50);
+    std::vector<int> ans = {}; 
+    verifyAnswer(range, ans, __FUNCTION__);
+}
+
+void removeMultipleFromInterval(){
+    Range range = Range();
+    range.addRange(0, 40);
+    range.deleteRange(5, 15);
+    range.deleteRange(25, 35);
+    std::vector<int> ans = {40, 35, 25, 15, 5, 0}; 
+    verifyAnswer(range, ans, __FUNCTION__);    
+}
+
 void removeTests()
 {
     std::cout << __FUNCTION__ << std::endl;
+    removeNothing();
+    removeNormal();
+    removeLeftBoundary();
+    removeRightBoundary();
+    removeMultipleFromInterval();
 
-    
+    removeMultipleIntervals();
+    removeMultipleIntervalsLeftBoundary();
+    removeMultipleIntervalsRightBoundary();
+    removeMultipleIntervalsBothBoundaries();
+
 }
 
 void getTests()
