@@ -121,8 +121,6 @@ void Range::deleteRange(int start, int end){
                 table.insert(std::make_pair(end, w2));
             }
         }
-        // otherwise 
-        return;
     } else {
         // otherwise, if they cover more than one range, handle that as well
         int w1 = v1->first;
@@ -132,7 +130,7 @@ void Range::deleteRange(int start, int end){
         // need to create a temporary iterator and increment it in order 
         // to include the interval of v1 when erasing
         auto vt = v1;
-        if (vt != table.end()){
+        if (vt != table.end() && start < vt->second){
             vt++;
         }
         table.erase(v2, vt);
