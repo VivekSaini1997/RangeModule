@@ -24,7 +24,7 @@ public:
         end: The end of the selection range
         Time Complexity: O(logn)
     */
-    void addRange(int, int);
+    void Add(int, int);
     /*
         Removes ranges that exist within the data structure
         that intersect with the selection range
@@ -33,7 +33,7 @@ public:
         end: The end of the selection range
         Time Complexity: O(logn)
     */
-    void deleteRange(int, int);
+    void Delete(int, int);
 
     /*
         Returns a list of ranges that exist within the data structure
@@ -43,7 +43,7 @@ public:
         end: The end of the selection range
         Time Complexity: O(n)
     */
-    std::vector<std::pair<int, int>> getRange(int, int);
+    std::vector<std::pair<int, int>> Get(int, int);
 
     /*
         Convenience function to print the start and endpoints of the range in reverse order.

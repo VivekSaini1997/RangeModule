@@ -20,7 +20,7 @@ Range::~Range() {
     end: The end of the selection range
     Time Complexity: O(logn)
 */
-void Range::addRange(int start, int end){
+void Range::Add(int start, int end){
     // find the maximal ranges whose starting point is less than or equal to that of
     // the "start" and "end" points
     auto startIter = table.lower_bound(start);
@@ -45,9 +45,9 @@ void Range::addRange(int start, int end){
             table.insert(std::make_pair(start, end));
         }
     // otherwise, there are one or more entire ranges between "start" and "end"
-    // in this case, remove all the ranges between "start" and "end", as well as 
+    // in this case, delete all the ranges between "start" and "end", as well as 
     // potentially the ranges they lie in
-    // and add a new range that is the union of all the ranges removed and 
+    // and add a new range that is the union of all the ranges deleted and 
     // the range formed by "start" and "end"  
     } else {
         // if "start" lies in an existing range
@@ -63,7 +63,7 @@ void Range::addRange(int start, int end){
         if (end < endIter->second){
             end = endIter->second;
         }
-        // remove the neccessary ranges from the data structure
+        // delete the neccessary ranges from the data structure
         // and replace them with the union of those ranges and the new range
         table.erase(endIter, startIter);
         table.insert(std::make_pair(start, end));
@@ -78,7 +78,7 @@ void Range::addRange(int start, int end){
     end: The end of the selection range
     Time Complexity: O(logn)
 */
-void Range::deleteRange(int start, int end){
+void Range::Delete(int start, int end){
     // find the maximal ranges whose starting point is less than or equal to that of
     // the "start" and "end" points
     auto startIter = table.lower_bound(start);
@@ -89,7 +89,7 @@ void Range::deleteRange(int start, int end){
     if (endIter == table.end()){
         return;
     }
-    // only try to remove if there exist ranges between "start" and "end"
+    // only try to delete if there exist ranges between "start" and "end"
     // if startIter == endIter and start > startIter->second, that means
     // "start" and "end" are between ranges, so nothing needs to be done
     if ((startIter == endIter && start <= startIter->second) || startIter != endIter){
@@ -126,7 +126,7 @@ void Range::deleteRange(int start, int end){
     end: The end of the selection range
     Time Complexity: O(n)
 */
-std::vector<std::pair<int, int>> Range::getRange(int start, int end){
+std::vector<std::pair<int, int>> Range::Get(int start, int end){
     // need to go through the map in reverse because of how it's organized
     auto startIter = table.lower_bound(start);
     auto endIter = table.lower_bound(end);

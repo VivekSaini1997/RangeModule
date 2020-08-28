@@ -9,7 +9,7 @@
 
 
 /*
-    Function used to verify correctness of the addRange and removeRange functions
+    Function used to verify correctness of the Add and deleteRange functions
     Checks input "range" against "ans" and prints message dependant on whether they match or not
 
     range: Range object to be verified
@@ -42,11 +42,11 @@ void verifyAnswer(const Range& range, const std::vector<int>& ans, const char* f
 }
 
 /*
-    Function used to verify correctness of the getRange function
+    Function used to verify correctness of the Get function
     Checks input "actual" against "expected" and prints message dependant on whether they match or not
 
-    actual: actual output from getRange function
-    ans: expected output from getRange function 
+    actual: actual output from Get function
+    ans: expected output from Get function 
     funcname: name of function calling verifyAnswer
 */
 void verifyAnswer(const std::vector<std::pair<int, int>>& actual, 
@@ -83,8 +83,8 @@ void verifyAnswer(const std::vector<std::pair<int, int>>& actual,
 void addIntoExistingRegion()
 {
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(2, 8);
+    range.Add(0, 10);
+    range.Add(2, 8);
     std::vector<int> ans = {10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -94,8 +94,8 @@ void addIntoExistingRegion()
 void addIntoEmptyRegion()
 {
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(11, 20);
+    range.Add(0, 10);
+    range.Add(11, 20);
     std::vector<int> ans = {20, 11, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -105,10 +105,10 @@ void addIntoEmptyRegion()
 void addOverExistingRegion()
 {
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.addRange(15, 35);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Add(15, 35);
     std::vector<int> ans = {50, 40, 35, 15, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -117,10 +117,10 @@ void addOverExistingRegion()
 // should extend existing range's end
 void addOverExistingRegionLeftBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.addRange(20, 35);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Add(20, 35);
     std::vector<int> ans = {50, 40, 35, 20, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -129,10 +129,10 @@ void addOverExistingRegionLeftBoundary(){
 // should extend existing range's start 
 void addOverExistingRegionRightBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.addRange(15, 30);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Add(15, 30);
     std::vector<int> ans = {50, 40, 30, 15, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -141,13 +141,13 @@ void addOverExistingRegionRightBoundary(){
 // should merge into the union of all ranges involved
 void addOverMultipleRegions(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.addRange(60, 70);
-    range.addRange(80, 90);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Add(60, 70);
+    range.Add(80, 90);
 
-    range.addRange(15, 75);
+    range.Add(15, 75);
     std::vector<int> ans = {90, 80, 75, 15, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -156,9 +156,9 @@ void addOverMultipleRegions(){
 // should merge all existing ranges
 void addPartialOverlapLeft(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(5, 35);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(5, 35);
     std::vector<int> ans = {35, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -167,9 +167,9 @@ void addPartialOverlapLeft(){
 // should merge all existing ranges
 void addPartialOverlapRight(){
     Range range = Range();
-    range.addRange(10, 20);
-    range.addRange(30, 40);
-    range.addRange(5, 35);
+    range.Add(10, 20);
+    range.Add(30, 40);
+    range.Add(5, 35);
     std::vector<int> ans = {40, 5};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -178,9 +178,9 @@ void addPartialOverlapRight(){
 // should merge all existing ranges
 void addPartialOverlapBoth(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(30, 40);
-    range.addRange(5, 35);
+    range.Add(0, 10);
+    range.Add(30, 40);
+    range.Add(5, 35);
     std::vector<int> ans = {40, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -189,10 +189,10 @@ void addPartialOverlapBoth(){
 // should extend that range both ways
 void addOverLeftMostRegion(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.addRange(-5, 15);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Add(-5, 15);
     std::vector<int> ans = {50, 40, 30, 20, 15, -5};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -201,10 +201,10 @@ void addOverLeftMostRegion(){
 // should extend that range both ways
 void addOverRightMostRegion(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.addRange(35, 55);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Add(35, 55);
     std::vector<int> ans = {55, 35, 30, 20, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -213,10 +213,10 @@ void addOverRightMostRegion(){
 // should extend that range both ways
 void addOverMiddleRegion(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30); 
-    range.addRange(40, 50);
-    range.addRange(15, 35);
+    range.Add(0, 10);
+    range.Add(20, 30); 
+    range.Add(40, 50);
+    range.Add(15, 35);
     std::vector<int> ans = {50, 40, 35, 15, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -226,9 +226,9 @@ void addOverMiddleRegion(){
 // should merge all ranges
 void addPartialOverlapBoundaryLeft(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(30, 40);
-    range.addRange(0, 35);
+    range.Add(0, 10);
+    range.Add(30, 40);
+    range.Add(0, 35);
 
     std::vector<int> ans = {40, 0};
     verifyAnswer(range, ans, __FUNCTION__);    
@@ -239,9 +239,9 @@ void addPartialOverlapBoundaryLeft(){
 // should merge all ranges
 void addPartialOverlapBoundaryRight(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(30, 40);
-    range.addRange(5, 40);
+    range.Add(0, 10);
+    range.Add(30, 40);
+    range.Add(5, 40);
 
     std::vector<int> ans = {40, 0};
     verifyAnswer(range, ans, __FUNCTION__);    
@@ -253,9 +253,9 @@ void addPartialOverlapBoundaryRight(){
 // should merge all ranges
 void addFullOverlapBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(30, 40);
-    range.addRange(0, 40);
+    range.Add(0, 10);
+    range.Add(30, 40);
+    range.Add(0, 40);
 
     std::vector<int> ans = {40, 0};
     verifyAnswer(range, ans, __FUNCTION__);    
@@ -265,8 +265,8 @@ void addFullOverlapBoundary(){
 // should not change existing ranges
 void addDuplicateRanges(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(0, 10);
+    range.Add(0, 10);
+    range.Add(0, 10);
 
     std::vector<int> ans = {10, 0};
     verifyAnswer(range, ans, __FUNCTION__);      
@@ -276,8 +276,8 @@ void addDuplicateRanges(){
 // should extend existing range
 void addExtendLeft(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(-10, 5);
+    range.Add(0, 10);
+    range.Add(-10, 5);
     
     std::vector<int> ans = {10, -10};
     verifyAnswer(range, ans, __FUNCTION__);  
@@ -287,15 +287,15 @@ void addExtendLeft(){
 // should extend existing range
 void addExtendRight(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(5, 20);
+    range.Add(0, 10);
+    range.Add(5, 20);
     
     std::vector<int> ans = {20, 0};
     verifyAnswer(range, ans, __FUNCTION__);  
 }
 
 /*
-    Runs all of the test cases pertaining to the addRange function
+    Runs all of the test cases pertaining to the Add function
 */
 void addTests()
 {
@@ -321,52 +321,52 @@ void addTests()
 
 // tests removing from an empty data structure
 // should do nothing
-void removeNothing(){
+void deleteNothing(){
     Range range = Range();
-    range.deleteRange(-5, 15);
+    range.Delete(-5, 15);
     std::vector<int> ans = {}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 // tests removing part of an existing range
-// should remove middle part of range and leave sides in tact
-void removeNormal(){
+// should delete middle part of range and leave sides in tact
+void deleteNormal(){
     Range range = Range();
-    range.addRange(0, 20);
-    range.deleteRange(5, 15);
+    range.Add(0, 20);
+    range.Delete(5, 15);
     std::vector<int> ans = {20, 15, 5, 0}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 
 // tests removing part of an existing range
-// should remove left side of range and leave right side in tact
-void removeLeftBoundary(){
+// should delete left side of range and leave right side in tact
+void deleteLeftBoundary(){
     Range range = Range();
-    range.addRange(0, 20);
-    range.deleteRange(0, 15);
+    range.Add(0, 20);
+    range.Delete(0, 15);
     std::vector<int> ans = {20, 15}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 // tests removing part of an existing range
-// should remove right side of range and leave left side in tact
-void removeRightBoundary(){
+// should delete right side of range and leave left side in tact
+void deleteRightBoundary(){
     Range range = Range();
-    range.addRange(0, 20);
-    range.deleteRange(5, 20);
+    range.Add(0, 20);
+    range.Delete(5, 20);
     std::vector<int> ans = {5, 0}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 // tests removing multiple ranges from data structure
 // should render data structure empty
-void removeMultipleIntervals(){
+void deleteMultipleIntervals(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(-5, 55);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(-5, 55);
     std::vector<int> ans = {}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -374,24 +374,24 @@ void removeMultipleIntervals(){
 // tests removing multiple ranges from data structure
 // selection includes start point of leftmost range
 // should render data structure empty
-void removeMultipleIntervalsLeftBoundary(){
+void deleteMultipleIntervalsLeftBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(0, 55);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(0, 55);
     std::vector<int> ans = {}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
 // tests removing multiple ranges from data structure
 // selection includes end point of rightmost range
 // should render data structure empty
-void removeMultipleIntervalsRightBoundary(){
+void deleteMultipleIntervalsRightBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(-5, 50);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(-5, 50);
     std::vector<int> ans = {}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
@@ -400,101 +400,103 @@ void removeMultipleIntervalsRightBoundary(){
 // selection includes end point of rightmost range 
 // and start point of leftmost ranges
 // should render data structure empty
-void removeMultipleIntervalsBothBoundaries(){
+void deleteMultipleIntervalsBothBoundaries(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(0, 50);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(0, 50);
     std::vector<int> ans = {}; 
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 // tests removing multiple times from same range
 // should leave holes in range where deletion occured
-void removeMultipleFromInterval(){
+void deleteMultipleFromInterval(){
     Range range = Range();
-    range.addRange(0, 40);
-    range.deleteRange(5, 15);
-    range.deleteRange(25, 35);
+    range.Add(0, 40);
+    range.Delete(5, 15);
+    range.Delete(25, 35);
     std::vector<int> ans = {40, 35, 25, 15, 5, 0}; 
     verifyAnswer(range, ans, __FUNCTION__);    
 }
 
 // tests removing multiple times from multiple ranges
 // should leave holes where deletion occured
-void removeMultipleTimesMultipleIntervals(){
+void deleteMultipleTimesMultipleIntervals(){
     Range range = Range();
-    range.addRange(0, 20);
-    range.addRange(40, 60);
-    range.addRange(80, 100);
-    range.deleteRange(10, 45);
-    range.deleteRange(55, 90);
+    range.Add(0, 20);
+    range.Add(40, 60);
+    range.Add(80, 100);
+    range.Delete(10, 45);
+    range.Delete(55, 90);
     std::vector<int> ans = {100, 90, 55, 45, 10, 0}; 
     verifyAnswer(range, ans, __FUNCTION__);     
 }
 
 // tests removing leftmost existing range
-// should remove leftmost existing range
-void removeLeftMostRegion(){
+// should delete leftmost existing range
+void deleteLeftMostRegion(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(-5, 15);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(-5, 15);
     std::vector<int> ans = {50, 40, 30, 20};
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 // tests removing rightmost existing range
-// should remove righrmost existing range
-void removeRightMostRegion(){
+// should delete righrmost existing range
+void deleteRightMostRegion(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(35, 55);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(35, 55);
     std::vector<int> ans = {30, 20, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
 // tests removing leftmost existing range
-// should remove leftmost existing range
-void removeMiddleRegion(){
+// should delete leftmost existing range
+void deleteMiddleRegion(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    range.deleteRange(15, 35);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    range.Delete(15, 35);
     std::vector<int> ans = {50, 40, 10, 0};
     verifyAnswer(range, ans, __FUNCTION__);
 }
 
-
-void removeTests()
+/*
+    Runs all of the test cases pertaining to the Delete function
+*/
+void deleteTests()
 {
-    removeNothing();
-    removeNormal();
-    removeLeftBoundary();
-    removeRightBoundary();
-    removeMultipleFromInterval();
+    deleteNothing();
+    deleteNormal();
+    deleteLeftBoundary();
+    deleteRightBoundary();
+    deleteMultipleFromInterval();
 
-    removeMultipleIntervals();
-    removeMultipleIntervalsLeftBoundary();
-    removeMultipleIntervalsRightBoundary();
-    removeMultipleIntervalsBothBoundaries();
-    removeMultipleTimesMultipleIntervals();
+    deleteMultipleIntervals();
+    deleteMultipleIntervalsLeftBoundary();
+    deleteMultipleIntervalsRightBoundary();
+    deleteMultipleIntervalsBothBoundaries();
+    deleteMultipleTimesMultipleIntervals();
 
-    removeLeftMostRegion();
-    removeRightMostRegion();
-    removeMiddleRegion();
+    deleteLeftMostRegion();
+    deleteRightMostRegion();
+    deleteMiddleRegion();
 }
 
 // tests getting an empty range
 // should return nothing
 void getEmptyInterval(){
     Range range = Range();
-    auto res = range.getRange(-10, 10);
+    auto res = range.Get(-10, 10);
     std::vector<std::pair<int, int>> ans = {}; 
     verifyAnswer(res, ans, __FUNCTION__);    
 }
@@ -503,8 +505,8 @@ void getEmptyInterval(){
 // should return the entire range in the data structure
 void getIntervalOvelappingBothSides(){
     Range range = Range();
-    range.addRange(0, 10);
-    auto res = range.getRange(-5, 15);
+    range.Add(0, 10);
+    auto res = range.Get(-5, 15);
     std::vector<std::pair<int, int>> ans = {{0, 10}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -513,8 +515,8 @@ void getIntervalOvelappingBothSides(){
 // should return part of the range
 void getPartialInterval(){
     Range range = Range();
-    range.addRange(0, 10);
-    auto res = range.getRange(2, 8);
+    range.Add(0, 10);
+    auto res = range.Get(2, 8);
     std::vector<std::pair<int, int>> ans = {{2, 8}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -524,8 +526,8 @@ void getPartialInterval(){
 // should return part of the range
 void getPartialIntervalLeftBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    auto res = range.getRange(0, 8);
+    range.Add(0, 10);
+    auto res = range.Get(0, 8);
     std::vector<std::pair<int, int>> ans = {{0, 8}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -535,8 +537,8 @@ void getPartialIntervalLeftBoundary(){
 // should return part of the range
 void getPartialIntervalRightBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    auto res = range.getRange(2, 10);
+    range.Add(0, 10);
+    auto res = range.Get(2, 10);
     std::vector<std::pair<int, int>> ans = {{2, 10}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -545,9 +547,9 @@ void getPartialIntervalRightBoundary(){
 // should return list of all ranges in data structure
 void getMultipleIntervalsOver(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    auto res = range.getRange(-10, 40);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    auto res = range.Get(-10, 40);
     std::vector<std::pair<int, int>> ans = {{0, 10}, {20, 30}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -556,9 +558,9 @@ void getMultipleIntervalsOver(){
 // should return list of all ranges in data structure
 void getMultipleIntervalsBoundary(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    auto res = range.getRange(0, 30);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    auto res = range.Get(0, 30);
     std::vector<std::pair<int, int>> ans = {{0, 10}, {20, 30}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -567,9 +569,9 @@ void getMultipleIntervalsBoundary(){
 // should return one whole range and one partial range
 void getMultipleIntervalsLeftPartial(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    auto res = range.getRange(5, 30);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    auto res = range.Get(5, 30);
     std::vector<std::pair<int, int>> ans = {{5, 10}, {20, 30}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -578,9 +580,9 @@ void getMultipleIntervalsLeftPartial(){
 // should return one whole range and one partial range
 void getMultipleIntervalsRightPartial(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    auto res = range.getRange(0, 25);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    auto res = range.Get(0, 25);
     std::vector<std::pair<int, int>> ans = {{0, 10}, {20, 25}}; 
     verifyAnswer(res, ans, __FUNCTION__);
 }
@@ -589,10 +591,10 @@ void getMultipleIntervalsRightPartial(){
 // should return two partial ranges
 void getMultipleIntervalsBothPartial(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    auto res = range.getRange(5, 45);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    auto res = range.Get(5, 45);
     std::vector<std::pair<int, int>> ans = {{5, 10}, {20, 30}, {40, 45}}; 
     verifyAnswer(res, ans, __FUNCTION__);    
 }
@@ -601,10 +603,10 @@ void getMultipleIntervalsBothPartial(){
 // should return the leftmost range in the data structure
 void getLeftMostInterval(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    auto res = range.getRange(-5, 15);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    auto res = range.Get(-5, 15);
     std::vector<std::pair<int, int>> ans = {{0, 10}}; 
     verifyAnswer(res, ans, __FUNCTION__);        
 }
@@ -613,10 +615,10 @@ void getLeftMostInterval(){
 // should return the rightmost range in the data structure
 void getRightMostInterval(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    auto res = range.getRange(35, 55);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    auto res = range.Get(35, 55);
     std::vector<std::pair<int, int>> ans = {{40, 50}}; 
     verifyAnswer(res, ans, __FUNCTION__);        
 }
@@ -625,14 +627,17 @@ void getRightMostInterval(){
 // should return the middle range in the data structure
 void getMiddleInterval(){
     Range range = Range();
-    range.addRange(0, 10);
-    range.addRange(20, 30);
-    range.addRange(40, 50);
-    auto res = range.getRange(20, 30);
+    range.Add(0, 10);
+    range.Add(20, 30);
+    range.Add(40, 50);
+    auto res = range.Get(20, 30);
     std::vector<std::pair<int, int>> ans = {{20, 30}}; 
     verifyAnswer(res, ans, __FUNCTION__);        
 }
 
+/*
+    Runs all of the test cases pertaining to the Get function
+*/
 void getTests()
 {
     getEmptyInterval();
@@ -652,6 +657,10 @@ void getTests()
     getRightMostInterval();
 }
 
+/*
+    Runs all of the test cases
+    Returns nothing, but prints to stdout
+*/
 void runTests()
 {
     std::cout << "--------------------------------------" << std::endl;
@@ -661,7 +670,7 @@ void runTests()
     std::cout << "--------------------------------------" << std::endl;
     std::cout << "Testing Remove Functionality:" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
-    removeTests();
+    deleteTests();
     std::cout << "--------------------------------------" << std::endl;
     std::cout << "Testing Get Functionality:" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
