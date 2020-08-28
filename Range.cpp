@@ -42,42 +42,6 @@ void Range::addRange(int start, int end){
         }
         return;
     } else {
-        #if 0 
-        // like wise if they're between values
-        // it->key is the start of the range and it->val is the end
-        if ((v1 == table.end() || start > v1->second) && end >= v2->second){
-            // if they don't both lie in an interval and are different, then 
-            // we must keep removing elements
-            // for now just print to make sure i'm doing this correctly
-            table.erase(v2, v1);
-            table.insert(std::make_pair(start, end));
-        }
-        // if the start of the new region lies in an existing region
-        // and the end of the new region does not, we need to remove the 
-        // interval the start region lies in and create a new interval that starts
-        // where that region started and ends at "end"
-        else if (start <= v1->second && end >= v2->second){
-            int w1 = v1->first;
-            table.erase(v2, ++v1);
-            table.insert(std::make_pair(w1, end));
-        }
-        // if the end of the new region lies in an existing region
-        // while the start does not, we need to remove the interval the 
-        // ending region lies in and create a new interval that starts at "start"
-        // and ends where the new region ended
-        else if ((v1 == table.end() || start > v1->second) && end < v2->second){
-            int w2 = v2->second;
-            table.erase(v2, v1);
-            table.insert(std::make_pair(start, w2));
-        }
-        // and if both occur, we do both
-        else if (start <= v1->second && end < v2->second){
-            int w1 = v1->first;
-            int w2 = v2->second;
-            table.erase(v2, ++v1);
-            table.insert(std::make_pair(w1, w2));
-        }
-        #else 
         if (start <= v1->second && v1 != table.end()){
             start = v1->first;
             v1++;
@@ -87,7 +51,6 @@ void Range::addRange(int start, int end){
         }
         table.erase(v2, v1);
         table.insert(std::make_pair(start, end));
-        #endif
     }
 }
 // deletes a range from the 
@@ -162,40 +125,22 @@ std::vector<std::pair<int, int>> Range::getRange(int start, int end){
         if (v1 != table.end() && start < v1->second){
             ret.push_back(std::make_pair(start, std::min(end, v1->second)));
         }
-        return ret;
-    }
-    
-    // first account for the first interval 
-    if (start >= v1->second || v1 == table.end()){
+     // otherwise start and end lie in different intervals
+    } else {
+        // first account 
+        if (start < v1->second && v1 != table.end()){
+            ret.push_back(std::make_pair(start, v1->second));
+        }
         v1--;
-        start = v1->first;
-    }
-    // std::cout << start << std::endl;
-    auto it = v1;
-    if (start != it->first){
-        std::cout << start << ", " << it->second << std::endl;
-        ret.push_back(std::make_pair(start, it->second));
-        it--; 
-    }
-    for (; it != v2; it--){
-        std::cout << it->first << ", " << it->second << std::endl;
-        ret.push_back(std::make_pair(it->first, it->second));
+        for (; v1 != v2; v1--){
+            ret.push_back(std::make_pair(v1->first, v1->second));
 
+        }
+        ret.push_back(std::make_pair(v1->first, std::min(v1->second, end)));
     }
-    ret.push_back(std::make_pair(it->first, std::min(it->second, end)));
-    
     return ret;
     
 }
-
-void Range::getUpper(int val){
-    std::cout << table.upper_bound(val)->first << std::endl;
-}
-
-void Range::getLower(int val){
-    std::cout << table.lower_bound(val)->first << std::endl;
-}
-
 
 void Range::printAll() const{
     for (auto&& elem : table){
