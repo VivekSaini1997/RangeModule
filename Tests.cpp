@@ -5,7 +5,7 @@
 
 // macro used to declutter output with success messages
 // only prints out failed testcases if enabled
-#define ONLY_PRINT_FAILURES 0
+#define ONLY_PRINT_FAILURES 1
 
 inline bool verifyAnswer(const Range& range, const std::vector<int>& ans, const char* funcname){
     bool success = (range.toVec() == ans);

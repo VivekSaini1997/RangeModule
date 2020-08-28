@@ -12,131 +12,146 @@ Range::~Range() {
 
 }
 
-// adds a range to the data structure
+/*
+    Adds a range to the data structure
+    Time Complexity: O(logn)
+*/
 void Range::addRange(int start, int end){
-    auto v1 = table.lower_bound(start);
-    auto v2 = table.lower_bound(end);
-    // if the end of the range is less than what exists in the table
-    // insert normally
-    if (v2 == table.end()){
+    // find the maximal ranges whose starting point is less than or equal to that of
+    // the "start" and "end" points
+    auto startIter = table.lower_bound(start);
+    auto endIter = table.lower_bound(end);
+    // if "end" is less than every range in the table
+    // this range is before the beginning, 
+    // so insert a new range there
+    if (endIter == table.end()){
         table.insert(std::make_pair(start, end));
-        return;
-    }
-    // handle if both v1 and v2 reference the same point
-    // these are simple cases
-    if (v1 == v2){
-        // if they are before an end point i.e. overlapping
-        // do nothing
-        if (start <= v1->second && end <= v1->second){
-            // pass
+    // if there is no entire existing range in between "start" and "end"
+    } else if (startIter == endIter){
+        // if "start" lies in an existing range while "end" does not, 
+        // then we update the existing range to go up to "end"
+        // i.e. the union of the existing range and the new range 
+        // defined by "start" and "end"
+        if (start <= startIter->second && end > startIter->second){
+            startIter->second = end;
         }
-        // if the new interval start lies in an existing interval
-        // while the new end does not, need to update the existing elements end
-        if (start <= v1->second && end > v1->second){
-            v1->second = end;
-        }
-        // if they're both after an end point
-        // add a new interval
-        if (start > v1->second){
+        // if both "start" and "end" lie outside of an existing range
+        // then insert a new range into the data structure from "start" to "end"
+        else if (start > startIter->second){
             table.insert(std::make_pair(start, end));
         }
-        return;
+    // otherwise, there are one or more entire ranges between "start" and "end"
+    // in this case, remove all the ranges between "start" and "end", as well as 
+    // potentially the ranges they lie in
+    // and add a new range that is the union of all the ranges removed and 
+    // the range formed by "start" and "end"  
     } else {
-        if (start <= v1->second && v1 != table.end()){
-            start = v1->first;
-            v1++;
+        // if "start" lies in an existing range
+        // move the "start" value to the beginning of the existing range
+        // also include this range when deleting (by incrementing the iterator)
+        if (start <= startIter->second && startIter != table.end()){
+            start = startIter->first;
+            startIter++;
         }
-        if (end < v2->second){
-            end = v2->second;
+        // if "end" lies in an existing range
+        // move the "end" value to the end of the existing range
+        // this range will always be included for deletion 
+        if (end < endIter->second){
+            end = endIter->second;
         }
-        table.erase(v2, v1);
+        // remove the neccessary ranges from the data structure
+        // and replace them with the union of those ranges and the new range
+        table.erase(endIter, startIter);
         table.insert(std::make_pair(start, end));
     }
 }
-// deletes a range from the 
+
+/*
+    Removes a range to the data structure
+    Time Complexity: O(logn)
+*/
 void Range::deleteRange(int start, int end){
-    auto v1 = table.lower_bound(start);
-    auto v2 = table.lower_bound(end);
-    // if the end of the range is less than what exists in the table
-    // there is nothing to delete
-    if (v2 == table.end()){
+    // find the maximal ranges whose starting point is less than or equal to that of
+    // the "start" and "end" points
+    auto startIter = table.lower_bound(start);
+    auto endIter = table.lower_bound(end);
+    // if "end" is less than every range in the table
+    // this range is before the beginning, 
+    // so there is nothing to do but return
+    if (endIter == table.end()){
         return;
     }
-    // handle if both v1 and v2 reference the same point
-    // these are simple cases
-    if (v1 == v2){
-        // if they are before an end point i.e. overlapping
-        // then split it up into sections
-        if (start <= v1->second){
-            int w1 = v1->first;
-            int w2 = v1->second;
-            // first erase the existing entry
-            table.erase(v1);
-            // if the start isn't on the boundary,  
-            // then add a left entry from w1 to start of deletion range
-            if (start != w1){
-                table.insert(std::make_pair(w1, start));
+    // if there is no entire existing range in between "start" and "end"
+    if (startIter == endIter){
+        // if "start" lies in an existing range
+        if (start <= startIter->second){
+            // store the start and end points of the ranges that "start" and "end" point to
+            int oldStart = startIter->first;
+            int oldEnd = endIter->second;
+            // first erase the existing range
+            table.erase(startIter);
+            // then if "start" isn't on the boundary, i.e. not the same as the old range's start  
+            // then insert a range from the old range's start to "start"
+            if (start != oldStart){
+                table.insert(std::make_pair(oldStart, start));
             }
-            // likewise for end and a right entry
-            // if the endpoint of removal lies within this interval and not on the boundary
-            // reinsert
-            if (end < w2){
-                table.insert(std::make_pair(end, w2));
+            // likewise, if "end" existed in the old range
+            // then insert a range from "end" to the old range's end
+            if (end < oldEnd){
+                table.insert(std::make_pair(end, oldEnd));
             }
         }
     } else {
         // otherwise, if they cover more than one range, handle that as well
-        int w1 = v1->first;
-        int w2 = v2->second;
-        // erase every interval between and including the ones 
-        // containing start and end
+        int oldStart = startIter->first;
+        int oldEnd = endIter->second;
+        // erase every interval between and including the ones containing "start" and "end"
         // need to create a temporary iterator and increment it in order 
-        // to include the interval of v1 when erasing
-        auto vt = v1;
+        // to possibly include the interval of startIter when erasing
+        auto vt = startIter;
         if (vt != table.end() && start < vt->second){
             vt++;
         }
-        table.erase(v2, vt);
-        // if the start isn't on the boundary,  
-        // then add a left entry from w1 to start of deletion range
-        if (start != w1 && v1 != table.end()){
-            table.insert(std::make_pair(w1, start));
+        table.erase(endIter, vt);
+        // then if "start" isn't on the boundary, i.e. not the same as the old range's start  
+        // then insert a range from the old range's start to "start"
+        if (start != oldStart && startIter != table.end()){
+            table.insert(std::make_pair(oldStart, start));
         }
-        // likewise for end and a right entry
-        // if the endpoint of removal lies within this interval and not on the boundary
-        // reinsert
-        if (end < w2){
-            table.insert(std::make_pair(end, w2));
+        // likewise, if "end" existed in the old range
+        // then insert a range from "end" to the old range's end
+        if (end < oldEnd){
+            table.insert(std::make_pair(end, oldEnd));
         }
     }
 }
 
 std::vector<std::pair<int, int>> Range::getRange(int start, int end){
     // need to go through the map in reverse because of how it's organized
-    auto v1 = table.lower_bound(start);
-    auto v2 = table.lower_bound(end);
+    auto startIter = table.lower_bound(start);
+    auto endIter = table.lower_bound(end);
 
     std::vector<std::pair<int, int>> ret;
     // if they're both part of the same interval
-    if (v1 == v2){
+    if (startIter == endIter){
         // if the starting point lies in the interval,
         // then there is something to return
         // otherwise there is nothing
-        if (v1 != table.end() && start < v1->second){
-            ret.push_back(std::make_pair(start, std::min(end, v1->second)));
+        if (startIter != table.end() && start < startIter->second){
+            ret.push_back(std::make_pair(start, std::min(end, startIter->second)));
         }
      // otherwise start and end lie in different intervals
     } else {
         // first account 
-        if (start < v1->second && v1 != table.end()){
-            ret.push_back(std::make_pair(start, v1->second));
+        if (start < startIter->second && startIter != table.end()){
+            ret.push_back(std::make_pair(start, startIter->second));
         }
-        v1--;
-        for (; v1 != v2; v1--){
-            ret.push_back(std::make_pair(v1->first, v1->second));
+        startIter--;
+        for (; startIter != endIter; startIter--){
+            ret.push_back(std::make_pair(startIter->first, startIter->second));
 
         }
-        ret.push_back(std::make_pair(v1->first, std::min(v1->second, end)));
+        ret.push_back(std::make_pair(startIter->first, std::min(startIter->second, end)));
     }
     return ret;
     
