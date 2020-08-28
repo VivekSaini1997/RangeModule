@@ -8,22 +8,55 @@
 class Range
 {
 private:
+    // the map used to contain information about ranges
+    // each key maps to a given range's start and the corresponding value
+    // maps to said range's end
     std::map<int, int, std::greater<int>> table;
 public:
-    Range(/* args */);
+    Range();
     ~Range();
 
+    /*
+        Adds a range to the data structure, merging together existing 
+        ranges if neccessary
+        
+        start: The start of the selection range
+        end: The end of the selection range
+        Time Complexity: O(logn)
+    */
     void addRange(int, int);
+    /*
+        Removes ranges that exist within the data structure
+        that intersect with the selection range
+
+        start: The start of the selection range
+        end: The end of the selection range
+        Time Complexity: O(logn)
+    */
     void deleteRange(int, int);
+
+    /*
+        Returns a list of ranges that exist within the data structure
+        that intersect with the selection range
+
+        start: The start of the selection range
+        end: The end of the selection range
+        Time Complexity: O(n)
+    */
     std::vector<std::pair<int, int>> getRange(int, int);
 
-    // print everything
+    /*
+        Convenience function to print the start and endpoints of the range in reverse order.
+        Returns nothing, but prints to stdout.
+        Used for Debugging.
+    */ 
     void printAll() const;
 
-    // serializes range into a list of points
-    // used for testing
+    /*
+        Convenience function to serialize the range into a list of start and end points.
+        Returns a list in reverse order.
+        Used for Testcase Verification.
+    */ 
     std::vector<int> toVec() const;
 };
-
-
 #endif

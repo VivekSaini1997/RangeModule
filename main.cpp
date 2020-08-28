@@ -4,4 +4,5 @@
 
 int main(){
     runTests();
+    auto r = Range();
 }
