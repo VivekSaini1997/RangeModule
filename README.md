@@ -1,7 +1,7 @@
 # Range Module
 
 ## Summary 
-An implementation of the Range Module. Supports Adding, Deleting, and Getting Ranges as specified by PDF. Can be used as a standalone project or as a module for another. Standalone variant also runs a suite of testcases to verify functionality.
+An implementation of the Range Module. Supports Adding, Deleting, and Getting Ranges. Can be used as a standalone project or as a module for another. Standalone variant also runs a suite of testcases to verify functionality.
 
 ## Dependancies
  - g++ (if running standalone)
